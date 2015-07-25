@@ -49,7 +49,7 @@
         Y=(1/EPSI1-1/EPSI2)*2.0*FILING*J1(X)/X
         END If
         A(INT1,INT2)=Y*(dreal(k+G1)*dreal(k+G2)
-     $               +dimag(k+G1)*dimag(k+G2)  ) 
+       $              +dimag(k+G1)*dimag(k+G2)  ) 
      
         A1(INT1,INT2)=Y*( ABS(K+G1)*ABS(K+G2) ) 
         CONTINUE
@@ -168,7 +168,7 @@
         END IF
         C(J)=G/H
         F=F+G*Q(J,I)
-50      CONTINUE
+       CONTINUE
         H2=F/(H+H)
         DO 56 J=1,I-1
         F=Q(I,J)
@@ -176,14 +176,14 @@
         C(J)=G
         DO 57 K=1,J
         Q(J,K)=Q(J,K)-F*C(K)-G*Q(I,K)
-57      CONTINUE
-56      CONTINUE
+       CONTINUE
+       CONTINUE
       B(I)=H
         END IF
-52      CONTINUE
+       CONTINUE
         DO 58 I=1,N-1
         C(I)=C(I+1)
-58      CONTINUE
+       CONTINUE
         C(N)=0.0
         B(1)=0.0
         DO 59 I=1,N
@@ -192,11 +192,11 @@
         G=0.0
         DO 60 K=1,I-1
         G=G+Q(I,K)*Q(K,J)
-60      CONTINUE
+      CONTINUE
         DO 61 K=1,I-1
         Q(K,J)=Q(K,J)-G*Q(K,I)
-61      CONTINUE
-62      CONTINUE
+       CONTINUE
+       CONTINUE
         END IF
         B(I)=Q(I,I)
         Q(I,I)=1.0
