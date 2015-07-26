@@ -38,7 +38,7 @@ OPEN(UNIT=2,FILE="sguide111.dat")
         G3=G1-G2
 
         X=2.0*PI*ABS(G3)*RATIO
-      计算相应的介电函数的Fourier系数。
+c      计算相应的介电函数的Fourier系数。
         IF (X. EQ . XX) THEN
         Y=FILING/EPSI1+(1-FILING)/EPSI2
         ELSE
@@ -58,7 +58,7 @@ OPEN(UNIT=2,FILE="sguide111.dat")
         CALL CSTRQ(A1,N,Q1,B1,C1)
         CALL CSSTQ(N,B1,C1,Q1,EPS,L)
 
-  将对角化后的本征值进行排序。 
+c  将对角化后的本征值进行排序。 
         DO 88 M1=1,288 
         DO 88 N1=M1+1,289
         IF ( B1(M1).GT.B1(N1) ) THEN
@@ -102,7 +102,7 @@ OPEN(UNIT=2,FILE="sguide111.dat")
 
         END
 
-     这个子程序计算一阶Bessel函数。
+c     这个子程序计算一阶Bessel函数。
         FUNCTION J1(X)
         REAL*8 X,J1
         REAL*8 PI,T
@@ -124,7 +124,7 @@ OPEN(UNIT=2,FILE="sguide111.dat")
         RETURN
         END
 
-    这个程序将对称的实数矩阵化成三对角的对称实数矩阵
+c    这个程序将对称的实数矩阵化成三对角的对称实数矩阵
         SUBROUTINE CSTRQ(A,N,Q,B,C)
         INTEGER I,J,N
         REAL*8 A(N,N),Q(N,N),B(N),C(N)
@@ -210,7 +210,7 @@ OPEN(UNIT=2,FILE="sguide111.dat")
        CONTINUE
       RETURN
         END
-   将对称的三对角实数矩阵对角化，传回去本征函数和本征值。
+c   将对称的三对角实数矩阵对角化，传回去本征函数和本征值。
         SUBROUTINE CSSTQ(N,B,C,Q,EPS,L)
         INTEGER N,L,IT
         REAL*8 B(N),C(N),Q(N,N),EPS
