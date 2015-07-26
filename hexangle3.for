@@ -1,16 +1,19 @@
-c   计算是六角结构的光子晶体的能带图
 
-     是由K到Gama点，
+
+c     这个程序计算六角结构的光子能带，是从J到K点的能带结构，
+
+C     程序中的诸多参量和cguide11.for中的完全一样， 
+
         IMPLICIT NONE
         REAL*8 A(289,289),Q(289,289),B(289),C(289)
         REAL*8 A1(289,289),Q1(289,289),B1(289),C1(289)
-        REAL*8 FILING,T,TC,EPS,LENTH,RATIO,slope
+        REAL*8 FILING,T,TC,EPS,LENTH,RATIO
         INTEGER N,M,L,M1,N1,M2,N2,INT1,INT2,I
         COMPLEX*16 G1,G2,G3,K
-        REAL*8 KX,KY,PI,TEMP,XX,J1,X,Y,EPSI1,EPSI2
+        REAL*8 KX,KY,PI,TEMP,XX,J1,X,Y,EPSI1,EPSI2,slope
 
-        OPEN(UNIT=2,FILE="sguide113.dat")
-        OPEN(UNIT=3,FILE="pguide113.dat")
+        OPEN(UNIT=2,FILE="sguide112.dat")
+        OPEN(UNIT=3,FILE="pguide112.dat")
 
         EPS=0.000001
         PI=3.1415926
@@ -22,10 +25,10 @@ c   计算是六角结构的光子晶体的能带图
         XX=0.0
         EPSI1=1.0
         EPSI2=2.231**2
-        slope=sqrt(3.0)/3.0
+        slope=-1.0/sqrt(3.0)
         
-        DO 1 KX=0.0, 0.5, 0.003/( 1+slope )
-        KY=KX*slope
+        DO 1 KY=0.0, 1.0/( 2.0*sqrt(3.0) ), 0.003
+        KX=0.5
         K=CMPLX(KX, KY) 
         INT1=0
 
@@ -51,8 +54,8 @@ c   计算是六角结构的光子晶体的能带图
      $               +dimag(k+G1)*dimag(k+G2)  ) 
      
         A1(INT1,INT2)=Y*( ABS(K+G1)*ABS(K+G2) ) 
-        CONTINUE
-        CONTINUE
+3       CONTINUE
+2       CONTINUE
 
         CALL CSTRQ(A,N,Q,B,C)
         CALL CSSTQ(N,B,C,Q,EPS,L)
@@ -73,7 +76,7 @@ c   计算是六角结构的光子晶体的能带图
         B(M1)=B(N1)
         B(N1)=TEMP
         END IF
-        CONTINUE
+88      CONTINUE
 
         INT2=0
         DO 44 INT1=1,289
@@ -82,24 +85,23 @@ c   计算是六角结构的光子晶体的能带图
         END IF
         IF (B(INT1).GE.XX) THEN
         INT2=INT2+1
-        temp=1.0 +1.0/sqrt(3.0)
-        WRITE(2,*) temp-kx-ky, 2.0*SQRT(ABS(B(INT1)))/sqrt(3.0)
+        
+        WRITE(2,*) kx+ky, 2.0*SQRT(ABS(B(INT1)))/sqrt(3.0)
         END IF
-        CONTINUE
+44      CONTINUE
 
-        INT2=0
+41      INT2=0
         DO 43 INT1=1,289
         IF (INT2.EQ.7) THEN
         GOTO 1
         END IF
         IF (B1(INT1).GE.XX) THEN
         INT2=INT2+1
-        temp=1.0 + 1.0/sqrt(3.0)
-        WRITE(3,*) temp-kx-ky, 2.0*SQRT( ABS(B1(INT1)) )/sqrt(3.0)
+        WRITE(3,*) KX+KY, 2.0*SQRT( ABS(B1(INT1)) )/sqrt(3.0)
         END IF 
-        continue
+43      continue
 
-        CONTINUE
+1       CONTINUE
 
         END
 
@@ -131,14 +133,14 @@ c   计算是六角结构的光子晶体的能带图
         DO 51 I=1,N
         DO 51 J=1,N
         Q(I,J)=A(I,J)
-        CONTINUE
+51      CONTINUE
 
         DO 52 I=N,2,-1
          H=0.0
         IF (I. GT .2) THEN
           DO 53 K=1,I-1
         H=H+Q(I,K)*Q(I,K)
-        CONTINUE
+53      CONTINUE
 
         END IF
         IF (H+1.0. EQ .1.0) THEN
@@ -160,15 +162,15 @@ c   计算是六角结构的光子晶体的能带图
         G=0.0
         DO 54 K=1,J
         G=G+Q(J,K)*Q(I,K)
-        CONTINUE
+54      CONTINUE
         IF (J+1. LE .I-1) THEN
         DO 55 K=J+1,I-1
         G=G+Q(K,J)*Q(I,K)
-        CONTINUE
+55      CONTINUE
         END IF
         C(J)=G/H
         F=F+G*Q(J,I)
-       CONTINUE
+50      CONTINUE
         H2=F/(H+H)
         DO 56 J=1,I-1
         F=Q(I,J)
@@ -176,14 +178,14 @@ c   计算是六角结构的光子晶体的能带图
         C(J)=G
         DO 57 K=1,J
         Q(J,K)=Q(J,K)-F*C(K)-G*Q(I,K)
-       CONTINUE
-        CONTINUE
+57      CONTINUE
+56      CONTINUE
       B(I)=H
         END IF
-        CONTINUE
+52      CONTINUE
         DO 58 I=1,N-1
         C(I)=C(I+1)
-        CONTINUE
+58      CONTINUE
         C(N)=0.0
         B(1)=0.0
         DO 59 I=1,N
@@ -192,11 +194,11 @@ c   计算是六角结构的光子晶体的能带图
         G=0.0
         DO 60 K=1,I-1
         G=G+Q(I,K)*Q(K,J)
-        CONTINUE
+60      CONTINUE
         DO 61 K=1,I-1
         Q(K,J)=Q(K,J)-G*Q(K,I)
-        CONTINUE
-        CONTINUE
+61      CONTINUE
+62      CONTINUE
         END IF
         B(I)=Q(I,I)
         Q(I,I)=1.0
@@ -204,9 +206,9 @@ c   计算是六角结构的光子晶体的能带图
         DO 63 J=1,I-1
          Q(I,J)=0.0
          Q(J,I)=0.0
-       CONTINUE
+63      CONTINUE
         END IF
-        CONTINUE
+59      CONTINUE
       RETURN
         END
 
@@ -225,15 +227,15 @@ c   计算是六角结构的光子晶体的能带图
         D=H
         END IF
         M=J-1
-        M=M+1
+71      M=M+1
         IF (M.LE.N) THEN
          IF (ABS(C(M)).GT.D) GOTO 71
         END IF
          IF (M.NE.J) THEN
-       IF (IT.EQ.60) THEN
+75     IF (IT.EQ.60) THEN
       L=0
         WRITE(*,88)
-        FORMAT (1X,'FAIL')
+88      FORMAT (1X,'FAIL')
         RETURN
          END IF
         IT=IT+1
@@ -248,7 +250,7 @@ c   计算是六角结构的光子晶体的能带图
         H=G-B(J)
         DO 72 I=J+1,N
         B(I)=B(I)-H
-       CONTINUE
+72      CONTINUE
 
       F=F+H
         P=B(M)
@@ -276,20 +278,20 @@ c   计算是六角结构的光子晶体的能带图
         H=Q(K,I+1)
         Q(K,I+1)=S*Q(K,I)+E*H
         Q(K,I)=E*Q(K,I)-S*H
-        CONTINUE
-        CONTINUE
+73      CONTINUE
+74      CONTINUE
         C(J)=S*P
         B(J)=E*P
         IF (ABS(C(J)).GT.D) GOTO 75
         END IF
         B(J)=B(J)+F
-        CONTINUE
+70      CONTINUE
       DO 76 I=1,N
         K=I
         P=B(I)
         IF (I+1. le .N) THEN
         J=I
-        J=J+1
+80      J=J+1
          IF (J.LE.N) THEN
          IF (B(J).LE.P) THEN
         K=J
@@ -305,9 +307,18 @@ c   计算是六角结构的光子晶体的能带图
          P=Q(J,I)
          Q(J,I)=Q(J,K)
          Q(J,K)=P
-        CONTINUE
+77      CONTINUE
       END IF
-       CONTINUE
+76      CONTINUE
       L=1 
         RETURN
         END
+
+
+
+
+
+
+
+
+
