@@ -1,19 +1,16 @@
+c	 这个程序计算的是六角结构的光子晶体的能带图
 
-
-c     这个程序计算六角结构的光子能带，是从J到K点的能带结构，
-
-C     程序中的诸多参量和cguide11.for中的完全一样， 
-
+c      是由K到Gama点
         IMPLICIT NONE
         REAL*8 A(289,289),Q(289,289),B(289),C(289)
         REAL*8 A1(289,289),Q1(289,289),B1(289),C1(289)
-        REAL*8 FILING,T,TC,EPS,LENTH,RATIO
+        REAL*8 FILING,T,TC,EPS,LENTH,RATIO,slope
         INTEGER N,M,L,M1,N1,M2,N2,INT1,INT2,I
         COMPLEX*16 G1,G2,G3,K
-        REAL*8 KX,KY,PI,TEMP,XX,J1,X,Y,EPSI1,EPSI2,slope
+        REAL*8 KX,KY,PI,TEMP,XX,J1,X,Y,EPSI1,EPSI2
 
-        OPEN(UNIT=2,FILE="sguide112.dat")
-        OPEN(UNIT=3,FILE="pguide112.dat")
+        OPEN(UNIT=2,FILE="sguide113.dat")
+        OPEN(UNIT=3,FILE="pguide113.dat")
 
         EPS=0.000001
         PI=3.1415926
@@ -25,10 +22,10 @@ C     程序中的诸多参量和cguide11.for中的完全一样，
         XX=0.0
         EPSI1=1.0
         EPSI2=2.231**2
-        slope=-1.0/sqrt(3.0)
+        slope=sqrt(3.0)/3.0
         
-        DO 1 KY=0.0, 1.0/( 2.0*sqrt(3.0) ), 0.003
-        KX=0.5
+        DO 1 KX=0.0, 0.5, 0.003/( 1+slope )
+        KY=KX*slope
         K=CMPLX(KX, KY) 
         INT1=0
 
@@ -85,8 +82,8 @@ C     程序中的诸多参量和cguide11.for中的完全一样，
         END IF
         IF (B(INT1).GE.XX) THEN
         INT2=INT2+1
-        
-        WRITE(2,*) kx+ky, 2.0*SQRT(ABS(B(INT1)))/sqrt(3.0)
+        temp=1.0 +1.0/sqrt(3.0)
+        WRITE(2,*) temp-kx-ky, 2.0*SQRT(ABS(B(INT1)))/sqrt(3.0)
         END IF
 44      CONTINUE
 
@@ -97,7 +94,8 @@ C     程序中的诸多参量和cguide11.for中的完全一样，
         END IF
         IF (B1(INT1).GE.XX) THEN
         INT2=INT2+1
-        WRITE(3,*) KX+KY, 2.0*SQRT( ABS(B1(INT1)) )/sqrt(3.0)
+        temp=1.0 + 1.0/sqrt(3.0)
+        WRITE(3,*) temp-kx-ky, 2.0*SQRT( ABS(B1(INT1)) )/sqrt(3.0)
         END IF 
 43      continue
 
